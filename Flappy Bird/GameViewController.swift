@@ -11,7 +11,7 @@ class GameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if let view = self.view as! SKView? {
+        if let view = view as! SKView? {
             
             let scene = GameScene(size: self.view.bounds.size)
             
@@ -22,15 +22,15 @@ class GameViewController: UIViewController {
             
             view.showsFPS = true
             view.showsNodeCount = true
-            view.showsPhysics = true
+            view.showsPhysics = false
         }
     }
 
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return .portrait
+        .portrait
     }
 
     override var prefersStatusBarHidden: Bool {
-        return true
+        true
     }
 }

@@ -4,12 +4,12 @@
 
 import SpriteKit
 
-class GameoverNode: SKSpriteNode {
+class GameOverNode: SKSpriteNode {
     
     static func populate(at point: CGPoint) -> SKSpriteNode {
-        let gameover = SKSpriteNode(imageNamed: "gameover")
-        gameover.position = point
-        gameover.zPosition = 20
-        return gameover
+        let gameOver = SKSpriteNode(imageNamed: "gameover")
+        gameOver.position = point
+        gameOver.zPosition = 20
+        return gameOver
     }
 }

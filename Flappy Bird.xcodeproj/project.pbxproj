@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		28AF06217A8BFAAD12167335 /* ColliderType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AF0213C4E307AB3C5C1B32 /* ColliderType.swift */; };
+		28AF0723232831A02AE805FE /* ScoreCounterNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AF09FB54187A46D149E1B0 /* ScoreCounterNode.swift */; };
+		28AF0A62B780C4E077F72D84 /* GameplayStates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AF0377A23C3F3B308F67FF /* GameplayStates.swift */; };
+		28AF0B1934FFC441F0C2643C /* ScoreSpriteNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AF08C345192FF28B15DAEC /* ScoreSpriteNode.swift */; };
 		4920926029885887001AE2FE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4920925F29885887001AE2FE /* AppDelegate.swift */; };
 		4920926629885887001AE2FE /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4920926529885887001AE2FE /* GameScene.swift */; };
 		4920926829885887001AE2FE /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4920926729885887001AE2FE /* GameViewController.swift */; };
@@ -19,10 +23,14 @@
 		497AAED02988A80C00696905 /* WelcomeNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497AAECF2988A80C00696905 /* WelcomeNode.swift */; };
 		497AAED22988A8B700696905 /* GameoverNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497AAED12988A8B700696905 /* GameoverNode.swift */; };
 		497AAED42988C00C00696905 /* PipesNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497AAED32988C00C00696905 /* PipesNode.swift */; };
-		49DA889A298874AF00A9FD81 /* GameplayStates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49DA8899298874AF00A9FD81 /* GameplayStates.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		28AF0213C4E307AB3C5C1B32 /* ColliderType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColliderType.swift; sourceTree = "<group>"; };
+		28AF0377A23C3F3B308F67FF /* GameplayStates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameplayStates.swift; sourceTree = "<group>"; };
+		28AF074C7F01E33C22C2584B /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = file.gitignore; path = .gitignore; sourceTree = "<group>"; };
+		28AF08C345192FF28B15DAEC /* ScoreSpriteNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoreSpriteNode.swift; sourceTree = "<group>"; };
+		28AF09FB54187A46D149E1B0 /* ScoreCounterNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoreCounterNode.swift; sourceTree = "<group>"; };
 		4920925C29885887001AE2FE /* Flappy Bird.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Flappy Bird.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4920925F29885887001AE2FE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4920926529885887001AE2FE /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
@@ -36,7 +44,7 @@
 		497AAECF2988A80C00696905 /* WelcomeNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeNode.swift; sourceTree = "<group>"; };
 		497AAED12988A8B700696905 /* GameoverNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameoverNode.swift; sourceTree = "<group>"; };
 		497AAED32988C00C00696905 /* PipesNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipesNode.swift; sourceTree = "<group>"; };
-		49DA8899298874AF00A9FD81 /* GameplayStates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameplayStates.swift; sourceTree = "<group>"; };
+		499F454F2989803100D49E4D /* Flappy-Bird-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Flappy-Bird-Info.plist"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,11 +58,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		28AF0C1BC88C297610926A20 /* Logic */ = {
+			isa = PBXGroup;
+			children = (
+				28AF0377A23C3F3B308F67FF /* GameplayStates.swift */,
+				28AF0213C4E307AB3C5C1B32 /* ColliderType.swift */,
+			);
+			path = Logic;
+			sourceTree = "<group>";
+		};
 		4920925329885887001AE2FE = {
 			isa = PBXGroup;
 			children = (
 				4920925E29885887001AE2FE /* Flappy Bird */,
 				4920925D29885887001AE2FE /* Products */,
+				28AF074C7F01E33C22C2584B /* .gitignore */,
 			);
 			sourceTree = "<group>";
 		};
@@ -69,6 +87,7 @@
 		4920925E29885887001AE2FE /* Flappy Bird */ = {
 			isa = PBXGroup;
 			children = (
+				499F454F2989803100D49E4D /* Flappy-Bird-Info.plist */,
 				497AAECC2988A5DA00696905 /* Nodes */,
 				4920925F29885887001AE2FE /* AppDelegate.swift */,
 				4920926529885887001AE2FE /* GameScene.swift */,
@@ -76,7 +95,7 @@
 				4920926929885887001AE2FE /* Main.storyboard */,
 				4920926C2988588C001AE2FE /* Assets.xcassets */,
 				4920926E2988588C001AE2FE /* LaunchScreen.storyboard */,
-				49DA8899298874AF00A9FD81 /* GameplayStates.swift */,
+				28AF0C1BC88C297610926A20 /* Logic */,
 			);
 			path = "Flappy Bird";
 			sourceTree = "<group>";
@@ -90,6 +109,8 @@
 				497AAED12988A8B700696905 /* GameoverNode.swift */,
 				497AAECF2988A80C00696905 /* WelcomeNode.swift */,
 				497AAED32988C00C00696905 /* PipesNode.swift */,
+				28AF08C345192FF28B15DAEC /* ScoreSpriteNode.swift */,
+				28AF09FB54187A46D149E1B0 /* ScoreCounterNode.swift */,
 			);
 			path = Nodes;
 			sourceTree = "<group>";
@@ -170,11 +191,14 @@
 				497AAED02988A80C00696905 /* WelcomeNode.swift in Sources */,
 				497AAED42988C00C00696905 /* PipesNode.swift in Sources */,
 				4920926829885887001AE2FE /* GameViewController.swift in Sources */,
-				49DA889A298874AF00A9FD81 /* GameplayStates.swift in Sources */,
 				4920926029885887001AE2FE /* AppDelegate.swift in Sources */,
 				497AAED22988A8B700696905 /* GameoverNode.swift in Sources */,
 				4975C17A2988612D000104AF /* BirdNode.swift in Sources */,
 				497AAECE2988A71600696905 /* BaseNode.swift in Sources */,
+				28AF0B1934FFC441F0C2643C /* ScoreSpriteNode.swift in Sources */,
+				28AF0A62B780C4E077F72D84 /* GameplayStates.swift in Sources */,
+				28AF06217A8BFAAD12167335 /* ColliderType.swift in Sources */,
+				28AF0723232831A02AE805FE /* ScoreCounterNode.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -323,6 +347,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = G4PV26QJD2;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Flappy-Bird-Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -354,6 +379,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = G4PV26QJD2;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Flappy-Bird-Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;

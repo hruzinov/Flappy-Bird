@@ -4,10 +4,7 @@
 
 import SpriteKit
 
-struct ColliderType {
-    static let bird: UInt32 = 1
-    static let environment: UInt32 = 2
-}
+
 
 class BirdNode: SKSpriteNode {
     

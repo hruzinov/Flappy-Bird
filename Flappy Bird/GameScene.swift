@@ -11,25 +11,28 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var background: SKSpriteNode!
     var base: SKSpriteNode!
     var welcomeMessage: SKSpriteNode!
-    var gameover: SKSpriteNode!
-    
+    var gameOver: SKSpriteNode!
+
+    var scoreCounter: SKSpriteNode!
+    var scoreCounterDozens: SKSpriteNode!
+
     var bird: SKSpriteNode!
     
     var gameState: GameState = .menu
     var birdState: BirdState = .falling
+    var gameScore: Int! = 0
     
     override func didMove(to view: SKView) {
-        sceneCenterPoint = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
-        self.physicsWorld.contactDelegate = self
-        self.physicsWorld.gravity = .zero
+        sceneCenterPoint = CGPoint(x: size.width / 2, y: size.height / 2)
+        physicsWorld.contactDelegate = self
+        physicsWorld.gravity = .zero
         
-        background = BackgroundNode.populate(at: sceneCenterPoint, size: self.size)
-        base = BaseNode.populate(size: self.size)
-        welcomeMessage = WelcomeNode.populate(size: self.size, at: sceneCenterPoint)
-        gameover = GameoverNode.populate(at: sceneCenterPoint)
+        background = BackgroundNode.populate(at: sceneCenterPoint, size: size)
+        base = BaseNode.populate(size: size)
+        welcomeMessage = WelcomeNode.populate(size: size, at: sceneCenterPoint)
+        gameOver = GameOverNode.populate(at: sceneCenterPoint)
         
         resetStartScene()
-        
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -38,29 +41,36 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             startGame()
         case .playing:
             jumpUp()
-        case .death:
-            resetStartScene()
+        case .death: ()
         }
     }
     
     fileprivate func resetStartScene() {
-        self.removeAllChildren()
-        self.removeAllActions()
+        removeAllChildren()
+        removeAllActions()
         
-        self.gameState = .menu
-        self.birdState = .falling
+        gameState = .menu
+        birdState = .falling
         
-        self.bird = BirdNode.populate(at: sceneCenterPoint, size: self.size)
+        bird = BirdNode.populate(at: sceneCenterPoint, size: size)
         
-        self.addChild(background)
-        self.addChild(welcomeMessage)
+        addChild(background)
+        addChild(welcomeMessage)
+
+        scoreCounter = ScoreCounterNode.populate(top: CGPoint(x: sceneCenterPoint.x, y: size.height), step: .right)
+        scoreCounterDozens = ScoreCounterNode.populate(top: CGPoint(x: sceneCenterPoint.x, y: size.height), step: .left)
+        addChild(scoreCounter)
+        addChild(scoreCounterDozens)
+        updateScoreCounter()
     }
     
     fileprivate func startGame() {
-        self.addChild(bird)
-        self.addChild(base)
+        addChild(bird)
+        addChild(base)
         welcomeMessage.removeFromParent()
         gameState = .playing
+        gameScore = 0
+        updateScoreCounter()
         runGravity()
         spawningPipesAction()
     }
@@ -93,15 +103,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     fileprivate func spawnPipe() {
-        let pipesArray = PipesNode.populate(size: self.size, on: nil, safeBorder: 250)
+        let safeBorder = 250
+
+        let pipesArray = PipesNode.populate(size: size, on: nil, safeBorder: safeBorder)
         let pipe = pipesArray[0]
         let pipeReversed = pipesArray[1]
-        
+
+        let scoreSprite = ScoreSpriteNode.populate(
+                at: CGPoint(x: pipe.position.x, y: pipe.position.y),
+                size: CGSize(width: pipe.size.width, height: CGFloat(safeBorder))
+        )
+
         pipe.run(SKAction.move(to: CGPoint(x: -100, y: pipe.position.y), duration: 4))
         pipeReversed.run(SKAction.move(to: CGPoint(x: -100, y: pipeReversed.position.y), duration: 4))
+        scoreSprite.run(SKAction.move(to: CGPoint(x: -100, y: scoreSprite.position.y), duration: 4))
         
-        self.addChild(pipe)
-        self.addChild(pipeReversed)
+        addChild(pipe)
+        addChild(pipeReversed)
+        addChild(scoreSprite)
     }
     
     fileprivate func jumpUp() {
@@ -109,21 +128,53 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         bird.run(SKAction.move(by: CGVector(dx: 0, dy: 150), duration: 0.15))
         birdState = .falling
     }
-    
-    fileprivate func hited() {
+
+    fileprivate func addScorePoint() {
         if gameState == .playing {
-            self.birdState = .dead
-            self.gameState = .death
-            
-            self.addChild(gameover)
+            gameScore += 1
+            updateScoreCounter()
+        }
+    }
+
+    fileprivate func updateScoreCounter() {
+        let scorePoints = gameScore % 10
+        let scorePointsDozens = gameScore / 10
+
+        scoreCounter.texture = SKTexture(imageNamed: String(scorePoints))
+        scoreCounterDozens.texture = SKTexture(imageNamed: String(scorePointsDozens))
+    }
+    
+    fileprivate func hitted() {
+        if gameState == .playing {
+
+            birdState = .dead
+            gameState = .death
+
+            addChild(gameOver)
+
+            let cooldownAction = SKAction.sequence([
+                SKAction.wait(forDuration: 3),
+                SKAction.run { [self] in
+                   resetStartScene()
+                }
+            ])
+
+            run(cooldownAction)
+
         }
     }
     
     override func didSimulatePhysics() {
-        enumerateChildNodes(withName: "pipe") { (node, stop) in
+        enumerateChildNodes(withName: "pipe") { (node, _) in
             let pipe = node as! SKSpriteNode
             if pipe.position.x == -100 {
                 pipe.removeFromParent()
+            }
+        }
+        enumerateChildNodes(withName: "scoreSprite") { (node, _) in
+            let scoreSprite = node as! SKSpriteNode
+            if scoreSprite.position.x == -100 {
+                scoreSprite.removeFromParent()
             }
         }
     }
@@ -140,8 +191,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             secondBody = contact.bodyA
         }
         
-        if firstBody.node?.name == "bird" && secondBody.node?.name == "environment" { hited() }
-        else if firstBody.node?.name == "bird" && secondBody.node?.name == "pipe" { hited() }
+        if firstBody.node?.name == "bird" && secondBody.node?.name == "environment" { hitted() }
+        else if firstBody.node?.name == "bird" && secondBody.node?.name == "pipe" { hitted() }
     }
-    
+
+    func didEnd(_ contact: SKPhysicsContact) {
+        var firstBody = SKPhysicsBody()
+        var secondBody = SKPhysicsBody()
+
+        if contact.bodyA.node?.name == "bird" {
+            firstBody = contact.bodyA
+            secondBody = contact.bodyB
+        } else {
+            firstBody = contact.bodyB
+            secondBody = contact.bodyA
+        }
+        if firstBody.node?.name == "bird" && secondBody.node?.name == "scoreSprite" { addScorePoint() }
+    }
 }
