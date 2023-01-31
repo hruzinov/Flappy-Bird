@@ -83,7 +83,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let fallDownWait = SKAction.wait(forDuration: fallingSpeed)
         let fallDownAction = SKAction.run { [self] in
             if birdState != .jumping {
-                bird.run(SKAction.move(by: CGVector(dx: 0, dy: -15), duration: fallingSpeed))
+                bird.run(SKAction.move(by: CGVector(dx: 0, dy: -15 - gameScore/10), duration: fallingSpeed))
             }
         }
         let fallDownASequence = SKAction.sequence([fallDownWait, fallDownAction])
@@ -91,7 +91,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         run(fallDownForever)
     }
     fileprivate func spawningPipesAction() {
-        let pipesInterval = 2
+        var pipesInterval:Double { 2.0 - Double(gameScore) / 50 }
         
         let spawnPipesWait = SKAction.wait(forDuration: TimeInterval(pipesInterval))
         let spawnPipesAction = SKAction.run { [self] in
@@ -105,7 +105,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     fileprivate func spawnPipe() {
-        let safeBorder = 250
+        let safeBorder = 250 - gameScore * 4
+        let pipesSpeed = 4.0 - Double(gameScore) / 50
 
         let pipesArray = PipesNode.populate(size: size, on: nil, safeBorder: safeBorder)
         let pipe = pipesArray[0]
@@ -116,9 +117,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 size: CGSize(width: pipe.size.width, height: CGFloat(safeBorder))
         )
 
-        pipe.run(SKAction.move(to: CGPoint(x: -100, y: pipe.position.y), duration: 4))
-        pipeReversed.run(SKAction.move(to: CGPoint(x: -100, y: pipeReversed.position.y), duration: 4))
-        scoreSprite.run(SKAction.move(to: CGPoint(x: -100, y: scoreSprite.position.y), duration: 4))
+        pipe.run(SKAction.move(to: CGPoint(x: -100, y: pipe.position.y), duration: pipesSpeed))
+        pipeReversed.run(SKAction.move(to: CGPoint(x: -100, y: pipeReversed.position.y), duration: pipesSpeed))
+        scoreSprite.run(SKAction.move(to: CGPoint(x: -100, y: scoreSprite.position.y), duration: pipesSpeed))
         
         addChild(pipe)
         addChild(pipeReversed)
