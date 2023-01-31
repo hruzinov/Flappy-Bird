@@ -44,7 +44,6 @@
 		497AAECF2988A80C00696905 /* WelcomeNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeNode.swift; sourceTree = "<group>"; };
 		497AAED12988A8B700696905 /* GameoverNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameoverNode.swift; sourceTree = "<group>"; };
 		497AAED32988C00C00696905 /* PipesNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipesNode.swift; sourceTree = "<group>"; };
-		499F454F2989803100D49E4D /* Flappy-Bird-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Flappy-Bird-Info.plist"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,15 +86,14 @@
 		4920925E29885887001AE2FE /* Flappy Bird */ = {
 			isa = PBXGroup;
 			children = (
-				499F454F2989803100D49E4D /* Flappy-Bird-Info.plist */,
-				497AAECC2988A5DA00696905 /* Nodes */,
 				4920925F29885887001AE2FE /* AppDelegate.swift */,
+				4920926C2988588C001AE2FE /* Assets.xcassets */,
 				4920926529885887001AE2FE /* GameScene.swift */,
 				4920926729885887001AE2FE /* GameViewController.swift */,
-				4920926929885887001AE2FE /* Main.storyboard */,
-				4920926C2988588C001AE2FE /* Assets.xcassets */,
 				4920926E2988588C001AE2FE /* LaunchScreen.storyboard */,
+				4920926929885887001AE2FE /* Main.storyboard */,
 				28AF0C1BC88C297610926A20 /* Logic */,
+				497AAECC2988A5DA00696905 /* Nodes */,
 			);
 			path = "Flappy Bird";
 			sourceTree = "<group>";

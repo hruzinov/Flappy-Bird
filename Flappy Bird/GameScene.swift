@@ -42,6 +42,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         case .playing:
             jumpUp()
         case .death: ()
+        case .gameover:
+            resetStartScene()
         }
     }
     
@@ -153,9 +155,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             addChild(gameOver)
 
             let cooldownAction = SKAction.sequence([
-                SKAction.wait(forDuration: 3),
+                SKAction.wait(forDuration: 1),
                 SKAction.run { [self] in
-                   resetStartScene()
+                    gameState = .gameover
                 }
             ])
 

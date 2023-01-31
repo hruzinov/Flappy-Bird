@@ -5,7 +5,7 @@
 import Foundation
 
 enum GameState {
-    case menu, playing, death
+    case menu, playing, death, gameover
 }
 
 enum BirdState {
