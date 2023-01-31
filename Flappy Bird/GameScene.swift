@@ -68,6 +68,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     fileprivate func startGame() {
         addChild(bird)
+        bird.texture = SKTexture(imageNamed: "bluebird-upflap")
         addChild(base)
         welcomeMessage.removeFromParent()
         gameState = .playing
@@ -128,6 +129,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     fileprivate func jumpUp() {
         birdState = .jumping
+        bird.run(SKAction.animate(with: BirdTextures.animationTextures, timePerFrame: 0.075))
         bird.run(SKAction.move(by: CGVector(dx: 0, dy: 150), duration: 0.15))
         birdState = .falling
     }

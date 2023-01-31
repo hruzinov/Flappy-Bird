@@ -4,15 +4,11 @@
 
 import SpriteKit
 
-
-
 class BirdNode: SKSpriteNode {
-    
-    static var state: BirdState = .falling
     
     static func populate(at point: CGPoint, size: CGSize) -> SKSpriteNode {
         
-        let birdTexture = SKTexture(imageNamed: "bluebird-midflap")
+        let birdTexture = BirdTextures.birdAtlas.textureNamed("bluebird-midflap")
         let bird = SKSpriteNode(texture: birdTexture)
         
         bird.name = "bird"
@@ -33,4 +29,17 @@ class BirdNode: SKSpriteNode {
         
     }
     
+}
+
+struct BirdTextures {
+    
+    static let birdAtlas = SKTextureAtlas(named: "bird")
+    
+    static let animationTextures = [
+        birdAtlas.textureNamed("bluebird-upflap"),
+        birdAtlas.textureNamed("bluebird-midflap"),
+        birdAtlas.textureNamed("bluebird-downflap"),
+        birdAtlas.textureNamed("bluebird-midflap"),
+        birdAtlas.textureNamed("bluebird-upflap")
+    ]
 }
