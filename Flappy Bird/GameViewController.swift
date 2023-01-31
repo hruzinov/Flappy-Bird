@@ -18,7 +18,6 @@ class GameViewController: UIViewController {
             scene.scaleMode = .aspectFill
                 
             view.presentScene(scene)
-            
             view.ignoresSiblingOrder = true
             
             view.showsFPS = true

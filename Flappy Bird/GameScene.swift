@@ -8,8 +8,7 @@ import GameplayKit
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var sceneCenterPoint: CGPoint!
-    var backgroundDay: SKSpriteNode!
-    var backgroundNight: SKSpriteNode!
+    var background: SKSpriteNode!
     var base: SKSpriteNode!
     var welcomeMessage: SKSpriteNode!
     var gameover: SKSpriteNode!
@@ -24,34 +23,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.physicsWorld.contactDelegate = self
         self.physicsWorld.gravity = .zero
         
-        backgroundDay = BackgroundNode.populateDay(at: sceneCenterPoint)
-        backgroundNight = BackgroundNode.populateNight(at: sceneCenterPoint)
-        backgroundDay.size = self.size
-        backgroundNight.size = self.size
+        background = BackgroundNode.populate(at: sceneCenterPoint, size: self.size)
+        base = BaseNode.populate(size: self.size)
+        welcomeMessage = WelcomeNode.populate(size: self.size, at: sceneCenterPoint)
+        gameover = GameoverNode.populate(at: sceneCenterPoint)
         
-        base = SKSpriteNode(imageNamed: "base")
-        base.name = "environment"
-        base.physicsBody = SKPhysicsBody(rectangleOf: base.size)
-        base.physicsBody?.categoryBitMask = ColliderType.environment
-        base.physicsBody?.contactTestBitMask = ColliderType.bird
-        base.physicsBody?.isDynamic = false
-        base.size = CGSize(width: self.size.width, height: self.size.width / 3)
-        base.position = CGPoint(x: self.size.width/2, y: 40)
-        base.zPosition = 2
-        
-        welcomeMessage = SKSpriteNode(imageNamed: "message")
-        welcomeMessage.position = sceneCenterPoint
-        welcomeMessage.zPosition = 20
-        welcomeMessage.size = CGSize(width: self.size.width / 1.45, height: self.size.width)
-        
-        gameover = SKSpriteNode(imageNamed: "gameover")
-        gameover.position = sceneCenterPoint
-        gameover.zPosition = 20
-        
-        bird = BirdNode.populate(at: sceneCenterPoint)
-        let birdWidth = self.size.width / 8
-        let birdHeight = birdWidth / 1.41
-        bird.size = CGSize(width: birdWidth, height: birdHeight)
+        bird = BirdNode.populate(at: sceneCenterPoint, size: self.size)
         
         resetStartScene()
     }
@@ -59,11 +36,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         switch gameState {
         case .menu:
-            self.addChild(bird)
-            self.addChild(base)
-            welcomeMessage.removeFromParent()
-            gameState = .playing
-            runGravity()
+            startGame()
         case .playing:
             jumpUp()
         case .death:
@@ -79,8 +52,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         self.bird.position = CGPoint(x: sceneCenterPoint.x, y: sceneCenterPoint.y / 1.2)
         
-        self.addChild(backgroundDay)
+        self.addChild(background)
         self.addChild(welcomeMessage)
+    }
+    
+    fileprivate func startGame() {
+        self.addChild(bird)
+        self.addChild(base)
+        welcomeMessage.removeFromParent()
+        gameState = .playing
+        runGravity()
     }
     
     fileprivate func runGravity() {
@@ -99,13 +80,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     fileprivate func jumpUp() {
         birdState = .jumping
-        bird.run(SKAction.move(by: CGVector(dx: 0, dy: 200), duration: 0.2))
+        bird.run(SKAction.move(by: CGVector(dx: 0, dy: 150), duration: 0.15))
         birdState = .falling
     }
     
     fileprivate func hited() {
         self.birdState = .dead
         self.gameState = .death
+        self.removeAllActions()
         
         self.addChild(gameover)
     }
