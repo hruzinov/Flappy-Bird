@@ -18,6 +18,7 @@
 		497AAECE2988A71600696905 /* BaseNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497AAECD2988A71600696905 /* BaseNode.swift */; };
 		497AAED02988A80C00696905 /* WelcomeNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497AAECF2988A80C00696905 /* WelcomeNode.swift */; };
 		497AAED22988A8B700696905 /* GameoverNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497AAED12988A8B700696905 /* GameoverNode.swift */; };
+		497AAED42988C00C00696905 /* PipesNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497AAED32988C00C00696905 /* PipesNode.swift */; };
 		49DA889A298874AF00A9FD81 /* GameplayStates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49DA8899298874AF00A9FD81 /* GameplayStates.swift */; };
 /* End PBXBuildFile section */
 
@@ -34,6 +35,7 @@
 		497AAECD2988A71600696905 /* BaseNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseNode.swift; sourceTree = "<group>"; };
 		497AAECF2988A80C00696905 /* WelcomeNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeNode.swift; sourceTree = "<group>"; };
 		497AAED12988A8B700696905 /* GameoverNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameoverNode.swift; sourceTree = "<group>"; };
+		497AAED32988C00C00696905 /* PipesNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipesNode.swift; sourceTree = "<group>"; };
 		49DA8899298874AF00A9FD81 /* GameplayStates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameplayStates.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -87,6 +89,7 @@
 				4975C1792988612D000104AF /* BirdNode.swift */,
 				497AAED12988A8B700696905 /* GameoverNode.swift */,
 				497AAECF2988A80C00696905 /* WelcomeNode.swift */,
+				497AAED32988C00C00696905 /* PipesNode.swift */,
 			);
 			path = Nodes;
 			sourceTree = "<group>";
@@ -165,6 +168,7 @@
 				4920926629885887001AE2FE /* GameScene.swift in Sources */,
 				4975C17129885D3B000104AF /* BackgroundNode.swift in Sources */,
 				497AAED02988A80C00696905 /* WelcomeNode.swift in Sources */,
+				497AAED42988C00C00696905 /* PipesNode.swift in Sources */,
 				4920926829885887001AE2FE /* GameViewController.swift in Sources */,
 				49DA889A298874AF00A9FD81 /* GameplayStates.swift in Sources */,
 				4920926029885887001AE2FE /* AppDelegate.swift in Sources */,

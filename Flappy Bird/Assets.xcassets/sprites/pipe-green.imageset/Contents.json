@@ -1,12 +1,12 @@
 {
   "images" : [
     {
-      "filename" : "pipe-green.png",
+      "filename" : "pipe-green@x1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "pipe-green 1.png",
+      "filename" : "pipe-green@x2.png",
       "idiom" : "universal",
       "scale" : "2x"
     },

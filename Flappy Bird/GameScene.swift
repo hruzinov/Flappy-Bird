@@ -28,9 +28,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         welcomeMessage = WelcomeNode.populate(size: self.size, at: sceneCenterPoint)
         gameover = GameoverNode.populate(at: sceneCenterPoint)
         
-        bird = BirdNode.populate(at: sceneCenterPoint, size: self.size)
-        
         resetStartScene()
+        
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -46,11 +45,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     fileprivate func resetStartScene() {
         self.removeAllChildren()
+        self.removeAllActions()
         
         self.gameState = .menu
         self.birdState = .falling
         
-        self.bird.position = CGPoint(x: sceneCenterPoint.x, y: sceneCenterPoint.y / 1.2)
+        self.bird = BirdNode.populate(at: sceneCenterPoint, size: self.size)
         
         self.addChild(background)
         self.addChild(welcomeMessage)
@@ -62,6 +62,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         welcomeMessage.removeFromParent()
         gameState = .playing
         runGravity()
+        spawningPipesAction()
     }
     
     fileprivate func runGravity() {
@@ -69,13 +70,38 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         let fallDownWait = SKAction.wait(forDuration: fallingSpeed)
         let fallDownAction = SKAction.run { [self] in
-            if birdState == .falling {
-                bird.run(SKAction.move(by: CGVector(dx: 0, dy: -20), duration: fallingSpeed))
+            if birdState != .jumping {
+                bird.run(SKAction.move(by: CGVector(dx: 0, dy: -15), duration: fallingSpeed))
             }
         }
         let fallDownASequence = SKAction.sequence([fallDownWait, fallDownAction])
         let fallDownForever = SKAction.repeatForever(fallDownASequence)
         run(fallDownForever)
+    }
+    fileprivate func spawningPipesAction() {
+        let pipesInterval = 2
+        
+        let spawnPipesWait = SKAction.wait(forDuration: TimeInterval(pipesInterval))
+        let spawnPipesAction = SKAction.run { [self] in
+            if gameState == .playing {
+                spawnPipe()
+            }
+        }
+        let spawnPipesWaitSequence = SKAction.sequence([spawnPipesWait, spawnPipesAction])
+        let spawnPipesForever = SKAction.repeatForever(spawnPipesWaitSequence)
+        run(spawnPipesForever)
+    }
+    
+    fileprivate func spawnPipe() {
+        let pipesArray = PipesNode.populate(size: self.size, on: nil, safeBorder: 250)
+        let pipe = pipesArray[0]
+        let pipeReversed = pipesArray[1]
+        
+        pipe.run(SKAction.move(to: CGPoint(x: -100, y: pipe.position.y), duration: 4))
+        pipeReversed.run(SKAction.move(to: CGPoint(x: -100, y: pipeReversed.position.y), duration: 4))
+        
+        self.addChild(pipe)
+        self.addChild(pipeReversed)
     }
     
     fileprivate func jumpUp() {
@@ -85,11 +111,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     fileprivate func hited() {
-        self.birdState = .dead
-        self.gameState = .death
-        self.removeAllActions()
-        
-        self.addChild(gameover)
+        if gameState == .playing {
+            self.birdState = .dead
+            self.gameState = .death
+            
+            self.addChild(gameover)
+        }
+    }
+    
+    override func didSimulatePhysics() {
+        enumerateChildNodes(withName: "pipe") { (node, stop) in
+            let pipe = node as! SKSpriteNode
+            if pipe.position.x == -100 {
+                pipe.removeFromParent()
+            }
+        }
     }
     
     func didBegin(_ contact: SKPhysicsContact) {
@@ -104,9 +140,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             secondBody = contact.bodyA
         }
         
-        if firstBody.node?.name == "bird" && secondBody.node?.name == "environment" {
-            hited()
-        }
+        if firstBody.node?.name == "bird" && secondBody.node?.name == "environment" { hited() }
+        else if firstBody.node?.name == "bird" && secondBody.node?.name == "pipe" { hited() }
     }
     
 }
