@@ -29,8 +29,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var gameScore: Int! = 0
     var bestScore: Int! = UserDefaults.standard.integer(forKey: "BestScore")
     
-    var environmentInterval: Double { 4 - (Double(gameScore) / 25) }
-    var environmentSpeed: Double { environmentInterval * 2 }
+    var environmentSpeed: Double { 8 - (Double(gameScore) / 50) }
+    var environmentInterval: Double { environmentSpeed / 2}
+//    var environmentInterval: Double { environmentSpeed / 2 - 0.1}
     
     override func didMove(to view: SKView) {
         sceneCenterPoint = CGPoint(x: size.width / 2, y: size.height / 2)
@@ -88,7 +89,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(bird)
         addChild(base)
         base.run(SKAction.move(by: CGVector(dx: -size.width, dy: 0), duration: environmentSpeed / 2))
-        background.run(SKAction.move(by: CGVector(dx: -size.width * 2.5, dy: 0), duration: environmentSpeed * 15))
+        background.run(SKAction.move(by: CGVector(dx: -size.width * 2.5, dy: 0), duration: environmentSpeed * 16))
         
         welcomeMessage.removeFromParent()
         gameState = .playing
@@ -102,7 +103,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     fileprivate func runGravity() {
-        let fallingSpeed = 0.05
+        let fallingSpeed = 45 / size.height
         
         let fallDownWait = SKAction.wait(forDuration: fallingSpeed)
         let fallDownAction = SKAction.run { [self] in
@@ -130,10 +131,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     fileprivate func spawnPipe() {
-        let safeBorder = 300 - gameScore * 3
+        let safeBorder = size.height / 4 - (CGFloat(gameScore) * size.height / 400)
         let pipesSpeed = environmentSpeed
 
-        let pipesArray = PipesNode.populate(size: size, on: nil, safeBorder: safeBorder)
+        let pipesArray = PipesNode.populate(size: size, on: nil, safeBorder: Int(safeBorder))
         let pipe = pipesArray[0]
         let pipeReversed = pipesArray[1]
 
@@ -193,7 +194,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         birdState = .jumping
         run(jumpSound)
         bird.run(SKAction.animate(with: BirdTextures.animationTextures, timePerFrame: 0.075))
-        bird.run(SKAction.move(by: CGVector(dx: 0, dy: 150), duration: 0.15))
+        bird.run(SKAction.move(by: CGVector(dx: 0, dy: size.height / 7), duration: 0.15))
         birdState = .falling
     }
 
@@ -249,15 +250,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     override func didSimulatePhysics() {
-        enumerateChildNodes(withName: "environment") { (node, _) in
-            let env = node as! SKSpriteNode
-            if env.position.x <= -self.size.width / 2 {
-                env.removeFromParent()
+        enumerateChildNodes(withName: "pipe") { (node, _) in
+            let pipe = node as! SKSpriteNode
+            if pipe.position.x <= -self.size.width / 2 {
+                pipe.removeFromParent()
             }
         }
         enumerateChildNodes(withName: "base") { (node, _) in
             let env = node as! SKSpriteNode
-            if env.position.x <= -self.size.width / 2.1 {
+            if env.position.x <= -self.size.width / 2 + 3 {
                 env.removeFromParent()
             }
         }
@@ -287,7 +288,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             secondBody = contact.bodyA
         }
         
-        if firstBody.node?.name == "bird" && secondBody.node?.name == "environment" { hitted() }
+        if firstBody.node?.name == "bird" && secondBody.node?.name == "pipe" { hitted() }
+        if firstBody.node?.name == "bird" && secondBody.node?.name == "base" { hitted() }
     }
 
     func didEnd(_ contact: SKPhysicsContact) {

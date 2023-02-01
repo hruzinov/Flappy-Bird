@@ -8,7 +8,7 @@ class PipesNode: SKSpriteNode {
     
     static func populate(size: CGSize, on position: CGPoint?, safeBorder: Int) -> [SKSpriteNode] {
         let pipe = SKSpriteNode(imageNamed: "pipe-green")
-        pipe.name = "environment"
+        pipe.name = "pipe"
         pipe.size = CGSize(width: size.width / 5, height: size.height)
         pipe.anchorPoint = CGPoint(x: 0.5, y: 1)
         pipe.physicsBody = SKPhysicsBody(edgeLoopFrom: pipe.frame)
@@ -16,7 +16,7 @@ class PipesNode: SKSpriteNode {
         let pipeReversed = SKSpriteNode(imageNamed: "pipe-green")
         
         pipeReversed.anchorPoint = CGPoint(x: 0.5, y: 0)
-        pipeReversed.name = "environment"
+        pipeReversed.name = "pipe"
         pipeReversed.size = CGSize(width: size.width / 5, height: size.height)
         pipeReversed.physicsBody = SKPhysicsBody(edgeLoopFrom: pipeReversed.frame)
         pipeReversed.physicsBody?.isDynamic = false

@@ -8,9 +8,8 @@ class ScoreCounterNode: SKSpriteNode {
     static func populate(top position: CGPoint, step: ScoreCounterStep) -> SKSpriteNode {
         let scoreCounter = SKSpriteNode(texture: SKTexture(imageNamed: "0"))
 
-        scoreCounter.setScale(2)
-
-        var padding = 25
+        scoreCounter.setScale(1.5)
+        var padding = scoreCounter.size.width / 1.9
 
         switch step {
         case .left:
