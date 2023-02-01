@@ -6,11 +6,11 @@ import SpriteKit
 
 class BaseNode: SKSpriteNode {
     
-    static func populate(size: CGSize) -> SKSpriteNode {
+    static func populate(size: CGSize, position: CGPoint) -> SKSpriteNode {
         let base = SKSpriteNode(imageNamed: "base")
         base.name = "environment"
         base.size = CGSize(width: size.width, height: size.width / 3)
-        base.position = CGPoint(x: size.width/2, y: 40)
+        base.position = position
         base.zPosition = 3
         
         base.physicsBody = SKPhysicsBody(rectangleOf: base.size)

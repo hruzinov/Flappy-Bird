@@ -28,7 +28,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         physicsWorld.gravity = .zero
         
         background = BackgroundNode.populate(at: sceneCenterPoint, size: size)
-        base = BaseNode.populate(size: size)
         welcomeMessage = WelcomeNode.populate(size: size, at: sceneCenterPoint)
         gameOver = GameOverNode.populate(at: sceneCenterPoint)
         
@@ -43,6 +42,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             jumpUp()
         case .death: ()
         case .gameover:
+            view?.isPaused = false
             resetStartScene()
         }
     }
@@ -55,6 +55,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         birdState = .falling
         
         bird = BirdNode.populate(at: sceneCenterPoint, size: size)
+        base = BaseNode.populate(size: size, position: CGPoint(x: size.width/2, y: 40))
         
         addChild(background)
         addChild(welcomeMessage)
@@ -67,15 +68,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     fileprivate func startGame() {
-        addChild(bird)
         bird.texture = SKTexture(imageNamed: "bluebird-upflap")
+        addChild(bird)
         addChild(base)
+        base.run(SKAction.move(by: CGVector(dx: -size.width, dy: 0), duration: 4))
+        
         welcomeMessage.removeFromParent()
         gameState = .playing
         gameScore = 0
         updateScoreCounter()
         runGravity()
         spawningPipesAction()
+        spawningBases()
     }
     
     fileprivate func runGravity() {
@@ -92,13 +96,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         run(fallDownForever)
     }
     fileprivate func spawningPipesAction() {
-        var pipesInterval:Double { 2.0 - Double(gameScore) / 50 }
+        var pipesInterval: Double { 3.0 - Double(gameScore) / 25 }
         
         let spawnPipesWait = SKAction.wait(forDuration: TimeInterval(pipesInterval))
         let spawnPipesAction = SKAction.run { [self] in
-            if gameState == .playing {
-                spawnPipe()
-            }
+            spawnPipe()
         }
         let spawnPipesWaitSequence = SKAction.sequence([spawnPipesWait, spawnPipesAction])
         let spawnPipesForever = SKAction.repeatForever(spawnPipesWaitSequence)
@@ -107,7 +109,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     fileprivate func spawnPipe() {
         let safeBorder = 250 - gameScore * 4
-        let pipesSpeed = 4.0 - Double(gameScore) / 50
+        let pipesSpeed = 10.0 - Double(gameScore) / 25
 
         let pipesArray = PipesNode.populate(size: size, on: nil, safeBorder: safeBorder)
         let pipe = pipesArray[0]
@@ -117,14 +119,33 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 at: CGPoint(x: pipe.position.x, y: pipe.position.y),
                 size: CGSize(width: pipe.size.width, height: CGFloat(safeBorder))
         )
-
-        pipe.run(SKAction.move(to: CGPoint(x: -100, y: pipe.position.y), duration: pipesSpeed))
-        pipeReversed.run(SKAction.move(to: CGPoint(x: -100, y: pipeReversed.position.y), duration: pipesSpeed))
-        scoreSprite.run(SKAction.move(to: CGPoint(x: -100, y: scoreSprite.position.y), duration: pipesSpeed))
+        
+        let movingVector = CGVector(dx: -size.width * 2.5, dy: 0)
+        
+        pipe.run(SKAction.move(by: movingVector, duration: pipesSpeed))
+        pipeReversed.run(SKAction.move(by: movingVector, duration: pipesSpeed))
+        scoreSprite.run(SKAction.move(by: movingVector, duration: pipesSpeed))
         
         addChild(pipe)
         addChild(pipeReversed)
         addChild(scoreSprite)
+    }
+    
+    fileprivate func spawningBases() {
+        var baseInterval: Double { 3.0 - Double(gameScore) / 25 }
+        
+        let spawnBaseWait = SKAction.wait(forDuration: TimeInterval(baseInterval))
+        let spawnBaseAction = SKAction.run { [self] in
+            let baseSpeed = 10.0 - Double(gameScore) / 25
+            let base = BaseNode.populate(size: size, position: CGPoint(x: size.width * 1.5, y: 40))
+            let movingVector = CGVector(dx: -size.width * 2.5, dy: 0)
+
+            base.run(SKAction.move(by: movingVector, duration: baseSpeed))
+            addChild(base)
+        }
+        let spawnBaseWaitSequence = SKAction.sequence([spawnBaseAction, spawnBaseWait])
+        let spawnBaseForever = SKAction.repeatForever(spawnBaseWaitSequence)
+        run(spawnBaseForever)
     }
     
     fileprivate func jumpUp() {
@@ -161,6 +182,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 SKAction.wait(forDuration: 1),
                 SKAction.run { [self] in
                     gameState = .gameover
+                    view?.isPaused = true
                 }
             ])
 
@@ -170,15 +192,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     override func didSimulatePhysics() {
-        enumerateChildNodes(withName: "pipe") { (node, _) in
+        enumerateChildNodes(withName: "environment") { (node, _) in
             let pipe = node as! SKSpriteNode
-            if pipe.position.x == -100 {
+            if pipe.position.x < -self.size.width / 2 {
                 pipe.removeFromParent()
             }
         }
         enumerateChildNodes(withName: "scoreSprite") { (node, _) in
             let scoreSprite = node as! SKSpriteNode
-            if scoreSprite.position.x == -100 {
+            if scoreSprite.position.x < -self.size.width / 5 {
                 scoreSprite.removeFromParent()
             }
         }
@@ -197,7 +219,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         if firstBody.node?.name == "bird" && secondBody.node?.name == "environment" { hitted() }
-        else if firstBody.node?.name == "bird" && secondBody.node?.name == "pipe" { hitted() }
     }
 
     func didEnd(_ contact: SKPhysicsContact) {

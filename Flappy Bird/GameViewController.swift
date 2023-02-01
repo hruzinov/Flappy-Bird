@@ -22,7 +22,7 @@ class GameViewController: UIViewController {
             
             view.showsFPS = true
             view.showsNodeCount = true
-            view.showsPhysics = false
+            view.showsPhysics = true
         }
     }
 
