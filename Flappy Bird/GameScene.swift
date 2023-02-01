@@ -25,8 +25,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var gameState: GameState = .menu
     var birdState: BirdState = .falling
+    var dayState: DayState = .day
     var gameScore: Int! = 0
     var bestScore: Int! = UserDefaults.standard.integer(forKey: "BestScore")
+    
+    var environmentInterval: Double { 4 - (Double(gameScore) / 25) }
+    var environmentSpeed: Double { environmentInterval * 2 }
     
     override func didMove(to view: SKView) {
         sceneCenterPoint = CGPoint(x: size.width / 2, y: size.height / 2)
@@ -55,7 +59,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             jumpUp()
         case .death: ()
         case .gameover:
-            view?.isPaused = false
             resetStartScene()
         }
     }
@@ -66,9 +69,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         gameState = .menu
         birdState = .falling
+        dayState = .day
         
         bird = BirdNode.populate(at: sceneCenterPoint, size: size)
-        background = BackgroundNode.populate(at: CGPoint(x: sceneCenterPoint.x + 1 , y: sceneCenterPoint.y), size: size)
+        background = BackgroundNode.populate(at: CGPoint(x: sceneCenterPoint.x + 1 , y: sceneCenterPoint.y), size: size, dayState: dayState)
         base = BaseNode.populate(size: size, position: CGPoint(x: size.width/2, y: 40))
         
         addChild(background)
@@ -83,8 +87,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         bird.texture = SKTexture(imageNamed: "bluebird-upflap")
         addChild(bird)
         addChild(base)
-        base.run(SKAction.move(by: CGVector(dx: -size.width, dy: 0), duration: 4))
-        background.run(SKAction.move(by: CGVector(dx: -size.width * 2.5, dy: 0), duration: 30))
+        base.run(SKAction.move(by: CGVector(dx: -size.width, dy: 0), duration: environmentSpeed / 2))
+        background.run(SKAction.move(by: CGVector(dx: -size.width * 2.5, dy: 0), duration: environmentSpeed * 15))
         
         welcomeMessage.removeFromParent()
         gameState = .playing
@@ -111,20 +115,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         run(fallDownForever)
     }
     fileprivate func spawningPipesAction() {
-        var pipesInterval: Double { 3.0 - Double(gameScore) / 25 }
-        
+        let pipesInterval = environmentInterval / 1.5
         let spawnPipesWait = SKAction.wait(forDuration: TimeInterval(pipesInterval))
-        let spawnPipesAction = SKAction.run { [self] in
-            spawnPipe()
-        }
-        let spawnPipesWaitSequence = SKAction.sequence([spawnPipesWait, spawnPipesAction])
-        let spawnPipesForever = SKAction.repeatForever(spawnPipesWaitSequence)
-        run(spawnPipesForever)
+        
+        let spawnPipesAction = SKAction.run { [self] in spawnPipe() }
+
+        
+        let spawnPipesWaitSequence = SKAction.sequence([
+            spawnPipesAction,
+            spawnPipesWait,
+            SKAction.run { self.spawningPipesAction() }
+        ])
+        run(spawnPipesWaitSequence)
     }
     
     fileprivate func spawnPipe() {
-        let safeBorder = 250 - gameScore * 4
-        let pipesSpeed = 10.0 - Double(gameScore) / 25
+        let safeBorder = 300 - gameScore * 3
+        let pipesSpeed = environmentSpeed
 
         let pipesArray = PipesNode.populate(size: size, on: nil, safeBorder: safeBorder)
         let pipe = pipesArray[0]
@@ -135,7 +142,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 size: CGSize(width: pipe.size.width, height: CGFloat(safeBorder))
         )
         
-        let movingVector = CGVector(dx: -size.width * 2.5, dy: 0)
+        let movingVector = CGVector(dx: -size.width * 2, dy: 0)
         
         pipe.run(SKAction.move(by: movingVector, duration: pipesSpeed))
         pipeReversed.run(SKAction.move(by: movingVector, duration: pipesSpeed))
@@ -147,36 +154,39 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     fileprivate func spawningBases() {
-        var baseInterval: Double { 3.0 - Double(gameScore) / 25 }
-        
-        let spawnBaseWait = SKAction.wait(forDuration: TimeInterval(baseInterval))
+        let spawnBaseWait = SKAction.wait(forDuration: TimeInterval(environmentInterval))
         let spawnBaseAction = SKAction.run { [self] in
-            let baseSpeed = 10.0 - Double(gameScore) / 25
             let base = BaseNode.populate(size: size, position: CGPoint(x: size.width * 1.5, y: 40))
-            let movingVector = CGVector(dx: -size.width * 2.5, dy: 0)
+            let movingVector = CGVector(dx: -size.width * 2, dy: 0)
 
-            base.run(SKAction.move(by: movingVector, duration: baseSpeed))
+            base.run(SKAction.move(by: movingVector, duration: environmentSpeed))
             addChild(base)
         }
-        let spawnBaseWaitSequence = SKAction.sequence([spawnBaseAction, spawnBaseWait])
-        let spawnBaseForever = SKAction.repeatForever(spawnBaseWaitSequence)
-        run(spawnBaseForever)
+        let spawnBaseWaitSequence = SKAction.sequence([
+            spawnBaseAction,
+            spawnBaseWait,
+            SKAction.run { self.spawningBases() }
+        ])
+        run(spawnBaseWaitSequence)
     }
+    
     fileprivate func spawningBackgrounds() {
-        var backgroundInterval: Double { 9.0 - Double(gameScore) / 25 }
-        
+        let backgroundInterval = environmentInterval * 7.5
         let spawnbackgroundWait = SKAction.wait(forDuration: TimeInterval(backgroundInterval))
         let spawnbackgroundAction = SKAction.run { [self] in
-            let backgroundSpeed = 30.0 - Double(gameScore) / 25
-            let background = BackgroundNode.populate(at: CGPoint(x: size.width * 1.5, y: sceneCenterPoint.y), size: size)
+            let backgroundSpeed = environmentSpeed * 15
+            let background = BackgroundNode.populate(at: CGPoint(x: size.width * 1.5, y: sceneCenterPoint.y), size: size, dayState: dayState)
             let movingVector = CGVector(dx: -size.width * 2.5, dy: 0)
 
             background.run(SKAction.move(by: movingVector, duration: backgroundSpeed))
             addChild(background)
         }
-        let spawnBackgroundWaitSequence = SKAction.sequence([spawnbackgroundAction, spawnbackgroundWait])
-        let spawnBackgroundForever = SKAction.repeatForever(spawnBackgroundWaitSequence)
-        run(spawnBackgroundForever)
+        let spawnBackgroundWaitSequence = SKAction.sequence([
+            spawnbackgroundAction,
+            spawnbackgroundWait,
+            SKAction.run { self.spawningBackgrounds() }
+        ])
+        run(spawnBackgroundWaitSequence)
     }
     
     fileprivate func jumpUp() {
@@ -192,18 +202,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             gameScore += 1
             updateScoreCounter(score: gameScore)
             run(pointSound)
-        }
-        
-        let textureArray: [SKTexture]
-        if gameScore % 10 == 0 {
-            if (gameScore / 10) % 2 == 1 {
-                textureArray = BackgroundTextures.animationTextures
-            } else {
-                textureArray = BackgroundTextures.animationTexturesReversed
-            }
             
-            for node in self.children {
-                if node.name == "background" { node.run(SKAction.animate(with: textureArray, timePerFrame: 0.05)) }
+            if gameScore % 10 == 0 {
+                let textureArray: [SKTexture]
+                if (gameScore / 10) % 2 == 1 {
+                    textureArray = BackgroundTextures.animationTextures
+                    dayState = .night
+                } else {
+                    textureArray = BackgroundTextures.animationTexturesReversed
+                    dayState = .day
+                }
+                
+                for node in self.children {
+                    if node.name == "background" { node.run(SKAction.animate(with: textureArray, timePerFrame: 0.05)) }
+                }
             }
         }
     }
@@ -218,48 +230,46 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     fileprivate func hitted() {
         if gameState == .playing {
-
             run(deathSound)
-            
             birdState = .dead
             gameState = .death
-            
+            addChild(gameOver)
             if gameScore > bestScore {
                 UserDefaults.standard.setValue(gameScore, forKey: "BestScore")
                 bestScore = gameScore
             }
-
-            addChild(gameOver)
-
             let cooldownAction = SKAction.sequence([
                 SKAction.wait(forDuration: 1),
                 SKAction.run { [self] in
                     gameState = .gameover
-                    view?.isPaused = true
                 }
             ])
-
             run(cooldownAction)
-
         }
     }
     
     override func didSimulatePhysics() {
         enumerateChildNodes(withName: "environment") { (node, _) in
-            let pipe = node as! SKSpriteNode
-            if pipe.position.x < -self.size.width / 2 {
-                pipe.removeFromParent()
+            let env = node as! SKSpriteNode
+            if env.position.x <= -self.size.width / 2 {
+                env.removeFromParent()
+            }
+        }
+        enumerateChildNodes(withName: "base") { (node, _) in
+            let env = node as! SKSpriteNode
+            if env.position.x <= -self.size.width / 2.1 {
+                env.removeFromParent()
             }
         }
         enumerateChildNodes(withName: "scoreSprite") { (node, _) in
             let scoreSprite = node as! SKSpriteNode
-            if scoreSprite.position.x < -self.size.width / 5 {
+            if scoreSprite.position.x <= -self.size.width / 5 {
                 scoreSprite.removeFromParent()
             }
         }
         enumerateChildNodes(withName: "background") { (node, _) in
             let backgroundSprite = node as! SKSpriteNode
-            if backgroundSprite.position.x < -self.size.width / 2 {
+            if backgroundSprite.position.x <= -self.size.width / 2 {
                 backgroundSprite.removeFromParent()
             }
         }

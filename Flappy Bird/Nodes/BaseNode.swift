@@ -8,10 +8,11 @@ class BaseNode: SKSpriteNode {
     
     static func populate(size: CGSize, position: CGPoint) -> SKSpriteNode {
         let base = SKSpriteNode(imageNamed: "base")
-        base.name = "environment"
+        base.name = "base"
         base.size = CGSize(width: size.width, height: size.width / 3)
         base.position = position
         base.zPosition = 3
+        base.xScale = 1.1
         
         base.physicsBody = SKPhysicsBody(rectangleOf: base.size)
         base.physicsBody?.categoryBitMask = ColliderType.environment

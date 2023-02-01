@@ -6,8 +6,16 @@ import SpriteKit
 
 class BackgroundNode: SKSpriteNode {
     
-    static func populate(at point: CGPoint, size: CGSize) -> SKSpriteNode {
-        let backgroundTexture = BackgroundTextures.backgroundAtlas.textureNamed("background-day")
+    static func populate(at point: CGPoint, size: CGSize, dayState: DayState) -> SKSpriteNode {
+                
+        let backgroundTexture: SKTexture
+        switch dayState {
+        case .day:
+            backgroundTexture = BackgroundTextures.backgroundAtlas.textureNamed("background-day")
+        case .night:
+            backgroundTexture = BackgroundTextures.backgroundAtlas.textureNamed("background-night")
+        }
+        
         let background = SKSpriteNode(texture: backgroundTexture)
         background.name = "background"
         background.position = point
@@ -17,6 +25,8 @@ class BackgroundNode: SKSpriteNode {
     }
     
 }
+
+enum DayState { case day, night}
 
 struct BackgroundTextures {
     

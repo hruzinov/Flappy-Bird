@@ -125,10 +125,10 @@
 				497AAECD2988A71600696905 /* BaseNode.swift */,
 				4975C1792988612D000104AF /* BirdNode.swift */,
 				497AAED12988A8B700696905 /* GameoverNode.swift */,
-				497AAECF2988A80C00696905 /* WelcomeNode.swift */,
 				497AAED32988C00C00696905 /* PipesNode.swift */,
-				28AF08C345192FF28B15DAEC /* ScoreSpriteNode.swift */,
 				28AF09FB54187A46D149E1B0 /* ScoreCounterNode.swift */,
+				28AF08C345192FF28B15DAEC /* ScoreSpriteNode.swift */,
+				497AAECF2988A80C00696905 /* WelcomeNode.swift */,
 			);
 			path = Nodes;
 			sourceTree = "<group>";
