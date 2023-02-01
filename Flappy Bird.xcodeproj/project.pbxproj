@@ -11,12 +11,16 @@
 		28AF0723232831A02AE805FE /* ScoreCounterNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AF09FB54187A46D149E1B0 /* ScoreCounterNode.swift */; };
 		28AF0A62B780C4E077F72D84 /* GameplayStates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AF0377A23C3F3B308F67FF /* GameplayStates.swift */; };
 		28AF0B1934FFC441F0C2643C /* ScoreSpriteNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28AF08C345192FF28B15DAEC /* ScoreSpriteNode.swift */; };
+		28AF0F7B5035C26387DF19D4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 28AF08ED131936B43279AB93 /* Assets.xcassets */; };
 		4920926029885887001AE2FE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4920925F29885887001AE2FE /* AppDelegate.swift */; };
 		4920926629885887001AE2FE /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4920926529885887001AE2FE /* GameScene.swift */; };
 		4920926829885887001AE2FE /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4920926729885887001AE2FE /* GameViewController.swift */; };
 		4920926B29885887001AE2FE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4920926929885887001AE2FE /* Main.storyboard */; };
-		4920926D2988588C001AE2FE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4920926C2988588C001AE2FE /* Assets.xcassets */; };
 		492092702988588C001AE2FE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4920926E2988588C001AE2FE /* LaunchScreen.storyboard */; };
+		496429F1298AEB50009B7C7D /* swoosh.wav in Resources */ = {isa = PBXBuildFile; fileRef = 496429ED298AEB50009B7C7D /* swoosh.wav */; };
+		496429F2298AEB50009B7C7D /* die.wav in Resources */ = {isa = PBXBuildFile; fileRef = 496429EE298AEB50009B7C7D /* die.wav */; };
+		496429F3298AEB50009B7C7D /* point.wav in Resources */ = {isa = PBXBuildFile; fileRef = 496429EF298AEB50009B7C7D /* point.wav */; };
+		496429F4298AEB50009B7C7D /* wing.wav in Resources */ = {isa = PBXBuildFile; fileRef = 496429F0298AEB50009B7C7D /* wing.wav */; };
 		4975C17129885D3B000104AF /* BackgroundNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4975C17029885D3B000104AF /* BackgroundNode.swift */; };
 		4975C17A2988612D000104AF /* BirdNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4975C1792988612D000104AF /* BirdNode.swift */; };
 		497AAECE2988A71600696905 /* BaseNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497AAECD2988A71600696905 /* BaseNode.swift */; };
@@ -30,14 +34,18 @@
 		28AF0377A23C3F3B308F67FF /* GameplayStates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameplayStates.swift; sourceTree = "<group>"; };
 		28AF074C7F01E33C22C2584B /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = file.gitignore; path = .gitignore; sourceTree = "<group>"; };
 		28AF08C345192FF28B15DAEC /* ScoreSpriteNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoreSpriteNode.swift; sourceTree = "<group>"; };
+		28AF08ED131936B43279AB93 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		28AF09FB54187A46D149E1B0 /* ScoreCounterNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoreCounterNode.swift; sourceTree = "<group>"; };
 		4920925C29885887001AE2FE /* Flappy Bird.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Flappy Bird.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4920925F29885887001AE2FE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4920926529885887001AE2FE /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
 		4920926729885887001AE2FE /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		4920926A29885887001AE2FE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		4920926C2988588C001AE2FE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4920926F2988588C001AE2FE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		496429ED298AEB50009B7C7D /* swoosh.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = swoosh.wav; sourceTree = "<group>"; };
+		496429EE298AEB50009B7C7D /* die.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = die.wav; sourceTree = "<group>"; };
+		496429EF298AEB50009B7C7D /* point.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = point.wav; sourceTree = "<group>"; };
+		496429F0298AEB50009B7C7D /* wing.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = wing.wav; sourceTree = "<group>"; };
 		4975C17029885D3B000104AF /* BackgroundNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundNode.swift; sourceTree = "<group>"; };
 		4975C1792988612D000104AF /* BirdNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirdNode.swift; sourceTree = "<group>"; };
 		497AAECD2988A71600696905 /* BaseNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseNode.swift; sourceTree = "<group>"; };
@@ -87,15 +95,27 @@
 			isa = PBXGroup;
 			children = (
 				4920925F29885887001AE2FE /* AppDelegate.swift */,
-				4920926C2988588C001AE2FE /* Assets.xcassets */,
+				28AF08ED131936B43279AB93 /* Assets.xcassets */,
 				4920926529885887001AE2FE /* GameScene.swift */,
 				4920926729885887001AE2FE /* GameViewController.swift */,
 				4920926E2988588C001AE2FE /* LaunchScreen.storyboard */,
-				4920926929885887001AE2FE /* Main.storyboard */,
 				28AF0C1BC88C297610926A20 /* Logic */,
+				4920926929885887001AE2FE /* Main.storyboard */,
 				497AAECC2988A5DA00696905 /* Nodes */,
+				496429EC298AEB50009B7C7D /* Sounds */,
 			);
 			path = "Flappy Bird";
+			sourceTree = "<group>";
+		};
+		496429EC298AEB50009B7C7D /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				496429ED298AEB50009B7C7D /* swoosh.wav */,
+				496429EE298AEB50009B7C7D /* die.wav */,
+				496429EF298AEB50009B7C7D /* point.wav */,
+				496429F0298AEB50009B7C7D /* wing.wav */,
+			);
+			path = Sounds;
 			sourceTree = "<group>";
 		};
 		497AAECC2988A5DA00696905 /* Nodes */ = {
@@ -172,8 +192,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				4920926B29885887001AE2FE /* Main.storyboard in Resources */,
-				4920926D2988588C001AE2FE /* Assets.xcassets in Resources */,
+				496429F1298AEB50009B7C7D /* swoosh.wav in Resources */,
+				496429F4298AEB50009B7C7D /* wing.wav in Resources */,
 				492092702988588C001AE2FE /* LaunchScreen.storyboard in Resources */,
+				496429F2298AEB50009B7C7D /* die.wav in Resources */,
+				28AF0F7B5035C26387DF19D4 /* Assets.xcassets in Resources */,
+				496429F3298AEB50009B7C7D /* point.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

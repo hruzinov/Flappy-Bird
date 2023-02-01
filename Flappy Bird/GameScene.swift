@@ -18,17 +18,31 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
     var bird: SKSpriteNode!
     
+    var gameStartSound: SKAction!
+    var jumpSound: SKAction!
+    var pointSound: SKAction!
+    var deathSound: SKAction!
+    
     var gameState: GameState = .menu
     var birdState: BirdState = .falling
     var gameScore: Int! = 0
+    var bestScore: Int! = UserDefaults.standard.integer(forKey: "BestScore")
     
     override func didMove(to view: SKView) {
         sceneCenterPoint = CGPoint(x: size.width / 2, y: size.height / 2)
         physicsWorld.contactDelegate = self
         physicsWorld.gravity = .zero
-        
+                
         welcomeMessage = WelcomeNode.populate(size: size, at: sceneCenterPoint)
         gameOver = GameOverNode.populate(at: sceneCenterPoint)
+        
+        scoreCounter = ScoreCounterNode.populate(top: CGPoint(x: sceneCenterPoint.x, y: size.height), step: .right)
+        scoreCounterDozens = ScoreCounterNode.populate(top: CGPoint(x: sceneCenterPoint.x, y: size.height), step: .left)
+        
+        gameStartSound = SKAction.playSoundFileNamed("swoosh.wav", waitForCompletion: false)
+        jumpSound = SKAction.playSoundFileNamed("wing.wav", waitForCompletion: false)
+        pointSound = SKAction.playSoundFileNamed("point.wav", waitForCompletion: false)
+        deathSound = SKAction.playSoundFileNamed("die.wav", waitForCompletion: false)
         
         resetStartScene()
     }
@@ -59,12 +73,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         addChild(background)
         addChild(welcomeMessage)
-
-        scoreCounter = ScoreCounterNode.populate(top: CGPoint(x: sceneCenterPoint.x, y: size.height), step: .right)
-        scoreCounterDozens = ScoreCounterNode.populate(top: CGPoint(x: sceneCenterPoint.x, y: size.height), step: .left)
+        
+        updateScoreCounter(score: bestScore)
         addChild(scoreCounter)
         addChild(scoreCounterDozens)
-        updateScoreCounter()
     }
     
     fileprivate func startGame() {
@@ -77,11 +89,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         welcomeMessage.removeFromParent()
         gameState = .playing
         gameScore = 0
-        updateScoreCounter()
+        updateScoreCounter(score: gameScore)
         runGravity()
         spawningPipesAction()
         spawningBases()
         spawningBackgrounds()
+        run(gameStartSound)
     }
     
     fileprivate func runGravity() {
@@ -168,6 +181,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     fileprivate func jumpUp() {
         birdState = .jumping
+        run(jumpSound)
         bird.run(SKAction.animate(with: BirdTextures.animationTextures, timePerFrame: 0.075))
         bird.run(SKAction.move(by: CGVector(dx: 0, dy: 150), duration: 0.15))
         birdState = .falling
@@ -176,7 +190,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     fileprivate func addScorePoint() {
         if gameState == .playing {
             gameScore += 1
-            updateScoreCounter()
+            updateScoreCounter(score: gameScore)
+            run(pointSound)
         }
         
         let textureArray: [SKTexture]
@@ -193,9 +208,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
 
-    fileprivate func updateScoreCounter() {
-        let scorePoints = gameScore % 10
-        let scorePointsDozens = gameScore / 10
+    fileprivate func updateScoreCounter(score: Int) {
+        let scorePoints = score % 10
+        let scorePointsDozens = score / 10
 
         scoreCounter.texture = SKTexture(imageNamed: String(scorePoints))
         scoreCounterDozens.texture = SKTexture(imageNamed: String(scorePointsDozens))
@@ -204,8 +219,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     fileprivate func hitted() {
         if gameState == .playing {
 
+            run(deathSound)
+            
             birdState = .dead
             gameState = .death
+            
+            if gameScore > bestScore {
+                UserDefaults.standard.setValue(gameScore, forKey: "BestScore")
+                bestScore = gameScore
+            }
 
             addChild(gameOver)
 
