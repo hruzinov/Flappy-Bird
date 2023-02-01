@@ -27,7 +27,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         physicsWorld.contactDelegate = self
         physicsWorld.gravity = .zero
         
-        background = BackgroundNode.populate(at: sceneCenterPoint, size: size)
         welcomeMessage = WelcomeNode.populate(size: size, at: sceneCenterPoint)
         gameOver = GameOverNode.populate(at: sceneCenterPoint)
         
@@ -55,6 +54,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         birdState = .falling
         
         bird = BirdNode.populate(at: sceneCenterPoint, size: size)
+        background = BackgroundNode.populate(at: CGPoint(x: sceneCenterPoint.x + 1 , y: sceneCenterPoint.y), size: size)
         base = BaseNode.populate(size: size, position: CGPoint(x: size.width/2, y: 40))
         
         addChild(background)
@@ -72,6 +72,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(bird)
         addChild(base)
         base.run(SKAction.move(by: CGVector(dx: -size.width, dy: 0), duration: 4))
+        background.run(SKAction.move(by: CGVector(dx: -size.width * 2.5, dy: 0), duration: 30))
         
         welcomeMessage.removeFromParent()
         gameState = .playing
@@ -80,6 +81,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         runGravity()
         spawningPipesAction()
         spawningBases()
+        spawningBackgrounds()
     }
     
     fileprivate func runGravity() {
@@ -147,6 +149,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let spawnBaseForever = SKAction.repeatForever(spawnBaseWaitSequence)
         run(spawnBaseForever)
     }
+    fileprivate func spawningBackgrounds() {
+        var backgroundInterval: Double { 9.0 - Double(gameScore) / 25 }
+        
+        let spawnbackgroundWait = SKAction.wait(forDuration: TimeInterval(backgroundInterval))
+        let spawnbackgroundAction = SKAction.run { [self] in
+            let backgroundSpeed = 30.0 - Double(gameScore) / 25
+            let background = BackgroundNode.populate(at: CGPoint(x: size.width * 1.5, y: sceneCenterPoint.y), size: size)
+            let movingVector = CGVector(dx: -size.width * 2.5, dy: 0)
+
+            background.run(SKAction.move(by: movingVector, duration: backgroundSpeed))
+            addChild(background)
+        }
+        let spawnBackgroundWaitSequence = SKAction.sequence([spawnbackgroundAction, spawnbackgroundWait])
+        let spawnBackgroundForever = SKAction.repeatForever(spawnBackgroundWaitSequence)
+        run(spawnBackgroundForever)
+    }
     
     fileprivate func jumpUp() {
         birdState = .jumping
@@ -159,6 +177,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if gameState == .playing {
             gameScore += 1
             updateScoreCounter()
+        }
+        
+        let textureArray: [SKTexture]
+        if gameScore % 10 == 0 {
+            if (gameScore / 10) % 2 == 1 {
+                textureArray = BackgroundTextures.animationTextures
+            } else {
+                textureArray = BackgroundTextures.animationTexturesReversed
+            }
+            
+            for node in self.children {
+                if node.name == "background" { node.run(SKAction.animate(with: textureArray, timePerFrame: 0.05)) }
+            }
         }
     }
 
@@ -202,6 +233,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let scoreSprite = node as! SKSpriteNode
             if scoreSprite.position.x < -self.size.width / 5 {
                 scoreSprite.removeFromParent()
+            }
+        }
+        enumerateChildNodes(withName: "background") { (node, _) in
+            let backgroundSprite = node as! SKSpriteNode
+            if backgroundSprite.position.x < -self.size.width / 2 {
+                backgroundSprite.removeFromParent()
             }
         }
     }
