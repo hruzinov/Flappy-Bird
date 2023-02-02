@@ -9,6 +9,7 @@ class BaseNode: SKSpriteNode {
     static func populate(size: CGSize, position: CGPoint) -> SKSpriteNode {
         let base = SKSpriteNode(imageNamed: "base")
         base.name = "base"
+        // +2 for compensate bug
         base.size = CGSize(width: size.width + 2, height: size.width / 3)
         base.position = position
         base.zPosition = 3

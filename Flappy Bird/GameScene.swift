@@ -7,6 +7,7 @@ import GameplayKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
+    // Importing nodes
     var sceneCenterPoint: CGPoint!
     var background: SKSpriteNode!
     var base: SKSpriteNode!
@@ -18,11 +19,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
     var bird: SKSpriteNode!
     
+    // Importing sound
     var gameStartSound: SKAction!
     var jumpSound: SKAction!
     var pointSound: SKAction!
     var deathSound: SKAction!
     
+    // Importing game parametrs
     var gameState: GameState = .menu
     var birdState: BirdState = .falling
     var dayState: DayState = .day
@@ -31,19 +34,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var environmentSpeed: Double { 8 - (Double(gameScore) / 50) }
     var environmentInterval: Double { environmentSpeed / 2}
-//    var environmentInterval: Double { environmentSpeed / 2 - 0.1}
-    
+
+    // When view showed
     override func didMove(to view: SKView) {
         sceneCenterPoint = CGPoint(x: size.width / 2, y: size.height / 2)
         physicsWorld.contactDelegate = self
         physicsWorld.gravity = .zero
-                
+        
+        // Load core nodes
         welcomeMessage = WelcomeNode.populate(size: size, at: sceneCenterPoint)
         gameOver = GameOverNode.populate(at: sceneCenterPoint)
         
         scoreCounter = ScoreCounterNode.populate(top: CGPoint(x: sceneCenterPoint.x, y: size.height), step: .right)
         scoreCounterDozens = ScoreCounterNode.populate(top: CGPoint(x: sceneCenterPoint.x, y: size.height), step: .left)
         
+        // Load sounds
         gameStartSound = SKAction.playSoundFileNamed("swoosh.wav", waitForCompletion: false)
         jumpSound = SKAction.playSoundFileNamed("wing.wav", waitForCompletion: false)
         pointSound = SKAction.playSoundFileNamed("point.wav", waitForCompletion: false)
@@ -52,6 +57,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         resetStartScene()
     }
     
+    // When user tap screen
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         switch gameState {
         case .menu:
@@ -64,6 +70,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
+    // Clean-up scene
     fileprivate func resetStartScene() {
         removeAllChildren()
         removeAllActions()
@@ -73,7 +80,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         dayState = .day
         
         bird = BirdNode.populate(at: sceneCenterPoint, size: size)
-        background = BackgroundNode.populate(at: CGPoint(x: sceneCenterPoint.x + 1 , y: sceneCenterPoint.y), size: size, dayState: dayState)
+        background = BackgroundNode.populate(at: CGPoint(x: sceneCenterPoint.x + 1 , y: sceneCenterPoint.y), size: size, dayState: dayState) // +1 becouse of bug with moving background
         base = BaseNode.populate(size: size, position: CGPoint(x: size.width/2, y: 40))
         
         addChild(background)
@@ -102,6 +109,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         run(gameStartSound)
     }
     
+    // Seting up gravity
     fileprivate func runGravity() {
         let fallingSpeed = 45 / size.height
         
@@ -115,6 +123,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let fallDownForever = SKAction.repeatForever(fallDownASequence)
         run(fallDownForever)
     }
+    
     fileprivate func spawningPipesAction() {
         let pipesInterval = environmentInterval / 1.5
         let spawnPipesWait = SKAction.wait(forDuration: TimeInterval(pipesInterval))
@@ -258,6 +267,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         enumerateChildNodes(withName: "base") { (node, _) in
             let env = node as! SKSpriteNode
+            // +3 for compensate bug with node
             if env.position.x <= -self.size.width / 2 + 3 {
                 env.removeFromParent()
             }
